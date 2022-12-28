@@ -16,6 +16,7 @@ namespace Game
         private InputController _inputController;
         private CameraController _cameraController;
         private ListExecuteObjectController _executeObject;
+        private int MenuIsActive = 0;
 
         IEnumerator interactivEnum;
 
@@ -46,7 +47,18 @@ namespace Game
                 GUI._resetButton.gameObject.SetActive(true);
             }
 
-            if(!_player)
+            if (Input.GetKey(KeyCode.Escape) && MenuIsActive == 0)
+            {
+                GUI._MenuWindow.SetActive(true);
+                MenuIsActive = 1;
+            }
+            if (Input.GetKey(KeyCode.Q) && MenuIsActive == 1)
+            {
+                GUI._MenuWindow.SetActive(false);
+                MenuIsActive = 0;
+            }
+
+            if (!_player)
             {
                 GUI._DefeatWindow.SetActive(true);
                 GUI._resetButton.gameObject.SetActive(true);

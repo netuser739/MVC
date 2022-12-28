@@ -31,6 +31,7 @@ namespace Game
         }
 
         public float Speed { get => _speed; set => _speed = value; }
+        public bool IsDead { get => _isDead; set => _isDead = value; }
 
         public virtual void Awake()
         {

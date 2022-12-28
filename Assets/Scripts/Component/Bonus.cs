@@ -5,11 +5,29 @@ using UnityEngine.UIElements;
 
 namespace Game
 {
+    public struct BonusData
+    {
+        public Color Color;
+        public Vector3 Position;
+        public Quaternion Rotation;
+        public string Tag;
+        public bool IsInteractable;
+
+        public BonusData(Bonus bonus)
+        {
+            Color = bonus.Color;
+            IsInteractable = bonus.IsInteractable;
+            Position = bonus.transform.position;
+            Rotation = bonus.transform.rotation;
+            Tag = bonus.tag;
+        }
+    }
+
     public abstract class Bonus : MonoBehaviour, IExecute, IFly
     {
 
         private bool _isInteractable;
-        protected Color _color;
+        private Color color;
         private Renderer _renderer;
         private Collider _collider;
 
@@ -18,7 +36,10 @@ namespace Game
 
         private Vector3 flyOffset = Vector3.up * 0.5f;
 
-        public bool IsInteractable 
+        private BonusData bonusData;
+        private ISaveData saveData;
+
+        public bool IsInteractable
         {
             get => _isInteractable;
 
@@ -31,6 +52,8 @@ namespace Game
 
             }
         }
+
+        public Color Color { get => color; set => color = value; }
 
         public virtual void Awake()
         {
@@ -45,10 +68,14 @@ namespace Game
             }
 
             IsInteractable = true;
-            _color = Random.ColorHSV();
-            _renderer.sharedMaterial.color = _color;
+            Color = Random.ColorHSV();
+            _renderer.sharedMaterial.color = Color;
 
             _heightFly = 1f;
+
+            saveData = new JSONBonudData(gameObject.name + ".json");
+            bonusData = new BonusData(this);
+            saveData.Save(bonusData);
         }
 
         private void OnTriggerEnter(Collider other)
